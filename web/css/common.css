@@ -1,0 +1,20 @@
+
+html {
+    font-size: 100px;
+}
+h1 {
+    font-size: .6rem;
+    text-align: center;
+}
+
+.msgbox{
+    background: none repeat scroll 0 0 #f8f8f8;
+    border: 1px solid #dcdcdc;
+    clear: both;
+    margin: auto;
+    width: 10rem;
+    max-width: 96%;
+    line-height: 20px;
+    font-size: .24rem;
+    text-align: center;
+}
