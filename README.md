@@ -26,7 +26,7 @@ docker部署：
     cd go-static-web
     docker image build -t mygostaticwebimg .
     docker run -it --name mygostaticweb01 -p 8080:8080 -d mygostaticwebimg:latest
-    docker exec -it mygostaticweb01 bash
+    docker exec -it mygostaticweb01 sh
 
 ```
 
