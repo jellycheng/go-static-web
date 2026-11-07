@@ -1,23 +1,29 @@
-FROM golang:1.17.0 AS builder
+FROM golang:1.22-alpine AS builder
 
-MAINTAINER jelly <42282367@qq.com>
+ARG GOPROXY=https://goproxy.cn,direct
+ENV CGO_ENABLED=0 \
+    GOOS=linux \
+    GOARCH=amd64 \
+    GOPROXY=${GOPROXY}
 
-ENV GOPATH /go
-ENV GO111MODULE on
-ENV CGO_ENABLED=0
-ENV GOPROXY=https://goproxy.cn/
+WORKDIR /app
 
-WORKDIR /go/src/go-static-web
-COPY ./main.go .
-COPY ./web ./web
+COPY go.mod ./
+RUN go mod download
 
-# 打包 RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o output/go-static-web main.go
-RUN GOOS=linux GOARCH=amd64 go build -o output/go-static-web main.go
-#CMD ["./output/go-static-web", "-addr=8080", "-path=./web"]
+COPY main.go ./
+RUN go build -trimpath -ldflags="-s -w" -o /out/go-static-web .
 
-FROM alpine:3.14.1
-COPY ./web /web
-# 从builder镜像中把文件拷贝到根目录
-COPY --from=builder /go/src/go-static-web/output/go-static-web /
-CMD ["/go-static-web", "-addr=8080", "-path=./web"]
+FROM alpine:3.20
 
+RUN adduser -D -u 10001 appuser
+
+COPY --from=builder /out/go-static-web /usr/local/bin/go-static-web
+COPY web /web
+
+USER appuser
+
+EXPOSE 8080
+
+ENTRYPOINT ["/usr/local/bin/go-static-web"]
+CMD ["-addr=8080", "-path=/web"]

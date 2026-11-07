@@ -1,0 +1,12 @@
+.git
+.gitignore
+.idea
+.vscode
+.DS_Store
+output/
+*.md
+LICENSE
+build.sh
+.env
+env
+.scannerwork/

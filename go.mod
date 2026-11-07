@@ -1,3 +1,3 @@
 module go-static-web
 
-go 1.14
+go 1.22
